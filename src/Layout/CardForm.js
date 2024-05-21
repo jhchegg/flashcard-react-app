@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 function CardForm({
@@ -9,19 +9,25 @@ function CardForm({
   isEdit,
 }) {
   const navigate = useNavigate();
-
-  const [front, setFront] = React.useState(card.front);
-  const [back, setBack] = React.useState(card.back);
+  const [front, setFront] = useState(card.front);
+  const [back, setBack] = useState(card.back);
 
   const handleFrontChange = (event) => setFront(event.target.value);
   const handleBackChange = (event) => setBack(event.target.value);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    await onSave(deckId, { front, back, id: card.id });
+    const deckIdNumber = parseInt(deckId, 10); 
+    const updatedCard = {
+      ...card,
+      front,
+      back,
+      id: card.id !== undefined ? card.id : null, 
+    };
+    console.log("Updated Card:", updatedCard);
+    await onSave(deckIdNumber, updatedCard); 
     setFront("");
     setBack("");
-    if (!isEdit) navigate(`/decks/${deckId}`);
   };
 
   const handleCancel = () => {

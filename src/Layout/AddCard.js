@@ -5,6 +5,7 @@ import { createCard, readDeck } from "../utils/api";
 
 function AddCard() {
   const [deckDetails, setDeckDetails] = useState({});
+  const [notification, setNotification] = useState("");
   const { deckId } = useParams();
   const navigate = useNavigate();
 
@@ -25,6 +26,8 @@ function AddCard() {
   const saveCard = async (deckId, card) => {
     const abortController = new AbortController();
     await createCard(deckId, card, abortController.signal);
+    setNotification("Card added successfully!");
+    setTimeout(() => setNotification(""), 500); 
   };
 
   const cancel = () => {
@@ -48,6 +51,25 @@ function AddCard() {
         onCancel={cancel}
         isEdit={false}
       />
+      {notification && (
+        <div
+          style={{
+            position: "fixed",
+            bottom: "20px",
+            left: "50%",
+            transform: "translateX(-50%)",
+            backgroundColor: "#28a745",
+            color: "white",
+            padding: "10px 20px",
+            borderRadius: "5px",
+            boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
+            fontSize: "16px",
+            zIndex: "1000",
+          }}
+        >
+          {notification}
+        </div>
+      )}
     </div>
   );
 }
